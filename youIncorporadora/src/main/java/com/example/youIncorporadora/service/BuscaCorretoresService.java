@@ -19,7 +19,6 @@ public class BuscaCorretoresService {
     }
 
     public List<String> buscaIncremental(String termo, List<String> nomes) {
-        // Verifica se o termo é nulo ou vazio
         if (termo == null || termo.isEmpty()) {
             System.out.println("Termo de busca não pode ser vazio.");
             return Collections.emptyList();
@@ -28,16 +27,15 @@ public class BuscaCorretoresService {
         Metaphone metaphone = new Metaphone();
         String termoCodificado = metaphone.metaphone(termo);
 
-        // Filtra nomes que não possuem a mesma codificação fonética
         List<String> resultados = nomes.stream()
-                .filter(nome -> !metaphone.metaphone(nome).equals(termoCodificado)) // Barrando nomes com a mesma codificação
-                .filter(nome -> nome.toLowerCase().contains(termo.toLowerCase())) // Busca os que contêm o termo
+                .filter(nome -> nome != null && !metaphone.metaphone(nome).equals(termoCodificado)) // Barrando nomes com a mesma codificação
+                .filter(nome -> nome != null && nome.toLowerCase().contains(termo.toLowerCase())) // Busca os que contêm o termo
                 .collect(Collectors.toList());
 
         if (resultados.isEmpty()) {
             resultados = nomes.stream()
-                    .filter(nome -> !metaphone.metaphone(nome).equals(termoCodificado)) // Barrando nomes com a mesma codificação
-                    .filter(nome -> metaphone.metaphone(nome).contains(termoCodificado)) // Busca foneticamente
+                    .filter(nome -> nome != null && !metaphone.metaphone(nome).equals(termoCodificado)) // Barrando nomes com a mesma codificação
+                    .filter(nome -> nome != null && metaphone.metaphone(nome).contains(termoCodificado)) // Busca foneticamente
                     .collect(Collectors.toList());
         }
 
